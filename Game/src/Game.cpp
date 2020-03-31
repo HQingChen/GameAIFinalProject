@@ -26,6 +26,7 @@
 #include "Building.h"
 #include "Constants.h"
 #include "Controller_UI.h"
+#include "Controller_AI_HeqingChen.h"
 #include "Mob.h"
 #include "Player.h"
 
@@ -39,7 +40,7 @@ Game::Game()
     // itself, or if you make one the UI and one your AI then you can play
     // against your AI.  If you make the controller NULL then that player
     // will just passively sit there and let you kill it.
-    buildPlayers(NULL, new Controller_UI);
+    buildPlayers(new Controller_AI_HeqingChen, new Controller_UI);
 
     buildWaypoints();
 }

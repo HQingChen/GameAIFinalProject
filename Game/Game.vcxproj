@@ -36,6 +36,9 @@
     <ClInclude Include="src\Player.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Controller_AI_HeqingChen\Controller_AI_HeqingChen.vcxproj">
+      <Project>{ad6764cd-c862-4814-9412-9028f0bb6a10}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Controller_UI\Controller_UI.vcxproj">
       <Project>{7225cd9e-322b-46e1-b1cd-68f78b6f474f}</Project>
     </ProjectReference>
@@ -114,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./src;../Interface/src;../external/SDL2/include;../external/SDL2_image\include;../external/SDL2_ttf/include;../Controller_UI/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Controller_AI_HeqingChen/src;./src;../Interface/src;../external/SDL2/include;../external/SDL2_image\include;../external/SDL2_ttf/include;../Controller_UI/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>26812</DisableSpecificWarnings>
       <PrecompiledHeaderFile />
@@ -140,7 +143,7 @@ xcopy /y /d  "$(ProjectDir)\fonts\abelregular.ttf" "$(OutDir)"</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include/sdl2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../Controller_AI_HeqingChen/src;include/sdl2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
     </ClCompile>
@@ -160,6 +163,7 @@ xcopy /y /d  "$(ProjectDir)\fonts\abelregular.ttf" "$(OutDir)"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <AdditionalIncludeDirectories>../Controller_AI_HeqingChen/src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -179,6 +183,7 @@ xcopy /y /d  "$(ProjectDir)\fonts\abelregular.ttf" "$(OutDir)"</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
+      <AdditionalIncludeDirectories>../Controller_AI_HeqingChen/src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "Controller_AI_KevinDill.h"
+#include "Controller_AI_HeqingChen.h"
 
 #include "Constants.h"
 #include "EntityStats.h"
@@ -30,7 +30,7 @@
 static const Vec2 ksGiantPos(LEFT_BRIDGE_CENTER_X, RIVER_TOP_Y - 0.5f);
 static const Vec2 ksArcherPos(LEFT_BRIDGE_CENTER_X, 0.f);
 
-void Controller_AI_KevinDill::tick(float deltaTSec)
+void Controller_AI_HeqingChen::tick(float deltaTSec)
 {
     assert(m_pPlayer);
 

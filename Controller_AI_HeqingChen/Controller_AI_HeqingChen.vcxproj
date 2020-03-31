@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Controller_AI_KevinDill.h" />
+    <ClInclude Include="src\Controller_AI_HeqingChen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Controller_AI_KevinDill.cpp" />
+    <ClCompile Include="src\Controller_AI_HeqingChen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Interface\Interface.vcxproj">

@@ -26,11 +26,11 @@
 
 
 
-class Controller_AI_KevinDill : public iController
+class Controller_AI_HeqingChen : public iController
 {
 public:
-    Controller_AI_KevinDill() {}
-    virtual ~Controller_AI_KevinDill() {}
+    Controller_AI_HeqingChen() {}
+    virtual ~Controller_AI_HeqingChen() {}
 
     void tick(float deltaTSec);
 };
