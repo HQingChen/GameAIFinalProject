@@ -41,7 +41,6 @@ void Controller_UI::tick(float deltaTSec) {
     while(!events.empty()) {
         SDL_Event e = events.front();
         events.pop();
-
         if ((e.type == SDL_MOUSEBUTTONUP) && (e.button.button == SDL_BUTTON_LEFT)) {
             int pixelX = -1;
             int pixelY = -1;

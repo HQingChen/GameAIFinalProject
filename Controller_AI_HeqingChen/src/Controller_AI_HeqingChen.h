@@ -33,4 +33,9 @@ public:
     virtual ~Controller_AI_HeqingChen() {}
 
     void tick(float deltaTSec);
+
+    int getNumOfSwordsman();
+    int getNumOfArcher();
+    int getNumOfGiant();
+
 };
