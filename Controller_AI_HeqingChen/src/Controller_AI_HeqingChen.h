@@ -23,6 +23,7 @@
 #pragma once
 
 #include "iController.h"
+#include "iPlayer.h"
 
 
 
@@ -38,4 +39,8 @@ public:
     int getNumOfArcher();
     int getNumOfGiant();
 
+    int getLeftCost(iPlayer*& m_pPlayer);
+    int getRightCost(iPlayer*& m_pPlayer);
+    int getLeftOpponentsCost(iPlayer*& m_pPlayer);
+    int getRightOpponentsCost(iPlayer*& m_pPlayer);
 };
