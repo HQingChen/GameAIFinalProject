@@ -27,14 +27,14 @@
 #include "Vec2.h"
 
 // initial position of troop on left side
-static const Vec2 leftSwordsmanPos(LEFT_BRIDGE_CENTER_X, RIVER_TOP_Y - 1.0f);
-static const Vec2 leftGiantPos(LEFT_BRIDGE_CENTER_X, RIVER_TOP_Y - 0.5f);
-static const Vec2 leftArcherPos(LEFT_BRIDGE_CENTER_X, NorthPrincessY);
+static Vec2 leftSwordsmanPos(LEFT_BRIDGE_CENTER_X, RIVER_TOP_Y - 1.0f);
+static Vec2 leftGiantPos(LEFT_BRIDGE_CENTER_X, RIVER_TOP_Y - 0.5f);
+static Vec2 leftArcherPos(LEFT_BRIDGE_CENTER_X, NorthPrincessY);
 
 // initial position of troop on right side
-static const Vec2 rightSwordsmanPos(RIGHT_BRIDGE_CENTER_X, RIVER_TOP_Y - 1.0f);
-static const Vec2 rightGiantPos(RIGHT_BRIDGE_CENTER_X, RIVER_TOP_Y - 0.5f);
-static const Vec2 rightArcherPos(RIGHT_BRIDGE_CENTER_X, NorthPrincessY);
+static Vec2 rightSwordsmanPos(RIGHT_BRIDGE_CENTER_X, RIVER_TOP_Y - 1.0f);
+static Vec2 rightGiantPos(RIGHT_BRIDGE_CENTER_X, RIVER_TOP_Y - 0.5f);
+static Vec2 rightArcherPos(RIGHT_BRIDGE_CENTER_X, NorthPrincessY);
 
 // these two variables are used for calculating the combat effectiveness between each camp on each lane
 static int leftCostDiff = 0;
@@ -189,62 +189,160 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
     }
     // behavior while there are opponents
     else {
+
+        // first check if opponents are close to the king tower and update the initial position of swordman and archer
+        int numOfOpponentsNearKing = 0;
+        for (int i = 0; i < m_pPlayer->getNumOpponentMobs(); i++) {
+            if (m_pPlayer->getOpponentMob(i).m_Position.y <= NorthPrincessY + 2.f) {
+                // left side
+                if (m_pPlayer->getOpponentMob(i).m_Position.x <= KingX) {
+                    leftSwordsmanPos.x = KingX - 1.f;
+                    leftSwordsmanPos.y = NorthPrincessY - 2.f;
+                    leftArcherPos.x = KingX - 1.f;
+                    leftArcherPos.y = NorthPrincessY - 2.f;
+                }
+                // right side
+                else {
+                    rightSwordsmanPos.x = KingX + 2.f;
+                    rightSwordsmanPos.y = NorthPrincessY - 2.f;
+                    rightArcherPos.x = KingX + 2.f;
+                    rightArcherPos.y = NorthPrincessY - 2.f;
+                }
+                numOfOpponentsNearKing++;
+            }
+        }
+        // if there is no opponent near the king, redefine the initial position
+        if (numOfOpponentsNearKing == 0) {
+            leftSwordsmanPos.x = LEFT_BRIDGE_CENTER_X;
+            leftSwordsmanPos.y = RIVER_TOP_Y - 1.0f;
+            leftArcherPos.x = LEFT_BRIDGE_CENTER_X;
+            leftArcherPos.y = NorthPrincessY;
+            rightSwordsmanPos.x = RIGHT_BRIDGE_CENTER_X;
+            rightSwordsmanPos.y = RIVER_TOP_Y - 1.0f;
+            rightArcherPos.x = RIGHT_BRIDGE_CENTER_X;
+            rightArcherPos.y = NorthPrincessY;
+        }
+
+        // calculate the cost difference to see which side has more enemies
         leftCostDiff = getLeftOpponentsCost(m_pPlayer) - getLeftCost(m_pPlayer);
         rightCostDiff = getRightOpponentsCost(m_pPlayer) - getRightCost(m_pPlayer);
         if (leftCostDiff >= rightCostDiff) {
-            if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
-                Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
+            // the left side has less military power, deploy troop for defense
+            if (leftCostDiff >= 0) {
+                if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
+                    Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
 
-                m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-            }
-            if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 giantPos_Game = leftGiantPos.Player2Game(isNorth);
-                m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
-            }
-            if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 giantPos_Game = leftGiantPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
 
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                }
             }
-            if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
-                m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+            // each lane has advantage, then deploy more troop on the better lane (right side) for pushing
+            else {
+                if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
+                    Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
+
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 giantPos_Game = rightGiantPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
+
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, rightSwordsmanPos);
+                }
             }
+           
         }
         else {
-            if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
-                Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
+            if (rightCostDiff >= 0) {
+                if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
+                    Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
 
-                m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-            }
-            if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 giantPos_Game = rightGiantPos.Player2Game(isNorth);
-                m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
-            }
-            if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 giantPos_Game = rightGiantPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
 
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, rightSwordsmanPos);
+                }
             }
-            if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
-                bool isNorth = m_pPlayer->isNorth();
-                Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
-                m_pPlayer->placeMob(iEntityStats::Swordsman, rightSwordsmanPos);
+            else {
+                if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
+                    Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
+
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 giantPos_Game = leftGiantPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
+
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                }
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                    bool isNorth = m_pPlayer->isNorth();
+                    Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
+                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                }
             }
         }
     }
