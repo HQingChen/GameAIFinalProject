@@ -39,6 +39,8 @@ static Vec2 rightArcherPos(RIGHT_BRIDGE_CENTER_X, NorthPrincessY);
 // these two variables are used for calculating the combat effectiveness between each camp on each lane
 static int leftCostDiff = 0;
 static int rightCostDiff = 0;
+bool hasSword = false;
+bool hasArcher = false;
 
 // return the number of own swordsman
 int Controller_AI_HeqingChen::getNumOfSwordsman() {
@@ -145,6 +147,11 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                 m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                 m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
             }
+            if (m_pPlayer->getElixir() > 5 && getNumOfGiant() == 0) {
+                bool isNorth = m_pPlayer->isNorth();
+                Vec2 giantPos_Game = leftGiantPos.Player2Game(isNorth);
+                m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
+            }
             if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
                 bool isNorth = m_pPlayer->isNorth();
                 Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
@@ -229,9 +236,7 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
         
         if (leftCostDiff >= rightCostDiff) {
             // the left side has less military power, deploy troop for defense
-            if (leftCostDiff >= 0) {
-                bool hasSword = false;
-                bool hasArcher = false;
+            if (leftCostDiff > 0) {
 
                 if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && !hasArcher) {
                     bool isNorth = m_pPlayer->isNorth();
@@ -284,9 +289,7 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
         }
         else {
             // the left side has less military power, deploy troop for defense
-            if (rightCostDiff >= 0) {
-                bool hasSword = false;
-                bool hasArcher = false;
+            if (rightCostDiff > 0) {
 
                 if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && !hasArcher) {
                     bool isNorth = m_pPlayer->isNorth();
