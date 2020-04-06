@@ -18,3 +18,7 @@ Swordsman and Archer on the left side for defense, since only those two arms can
 is smaller than 0, which means that both side have military superiority. So I made the AI deploy the troops on the right side for better 
 attacking opponents and improving the advantages. In this case, the AI should first consider putting the Giant on the board for better 
 pushing the tower on the right side.
+
+These are the design of the AI with the decision making structure. Also, if a queen tower is broken on one of the sides, the initial
+deployment position of the troops on that side would change to be near the king tower if there are opponent troops near the king tower. It
+should always make sure to defend the king first.
