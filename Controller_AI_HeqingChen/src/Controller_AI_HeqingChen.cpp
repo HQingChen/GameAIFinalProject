@@ -238,11 +238,6 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
-                    bool isNorth = m_pPlayer->isNorth();
-                    Vec2 giantPos_Game = leftGiantPos.Player2Game(isNorth);
-                    m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
-                }
                 if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
@@ -267,19 +262,20 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                 }
+                // first consider put the giant on the advantage lane
                 if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 giantPos_Game = rightGiantPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0 && getNumOfGiant() > 1) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
 
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0 && getNumOfGiant() > 1) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Swordsman, rightSwordsmanPos);
@@ -288,6 +284,7 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
            
         }
         else {
+            // the left side has less military power, deploy troop for defense
             if (rightCostDiff >= 0) {
                 if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
                     bool isNorth = m_pPlayer->isNorth();
@@ -298,11 +295,6 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 5 && getNumOfGiant() <= 1) {
-                    bool isNorth = m_pPlayer->isNorth();
-                    Vec2 giantPos_Game = rightGiantPos.Player2Game(isNorth);
-                    m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
-                }
                 if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
@@ -316,6 +308,7 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                     m_pPlayer->placeMob(iEntityStats::Swordsman, rightSwordsmanPos);
                 }
             }
+            // each lane has advantage, then deploy more troop on the better lane (left side) for pushing
             else {
                 if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
                     bool isNorth = m_pPlayer->isNorth();
@@ -331,14 +324,14 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                     Vec2 giantPos_Game = leftGiantPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0 && getNumOfGiant() > 1) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
 
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0 && getNumOfGiant() > 1) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
