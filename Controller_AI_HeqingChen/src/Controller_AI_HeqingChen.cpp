@@ -226,29 +226,28 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
         // calculate the cost difference to see which side has more enemies
         leftCostDiff = getLeftOpponentsCost(m_pPlayer) - getLeftCost(m_pPlayer);
         rightCostDiff = getRightOpponentsCost(m_pPlayer) - getRightCost(m_pPlayer);
+        
         if (leftCostDiff >= rightCostDiff) {
             // the left side has less military power, deploy troop for defense
             if (leftCostDiff >= 0) {
-                if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
-                    bool isNorth = m_pPlayer->isNorth();
-                    Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
-                    Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
+                bool hasSword = false;
+                bool hasArcher = false;
 
-                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
-                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                }
-                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && !hasArcher) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = leftArcherPos.Player2Game(isNorth);
 
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    hasSword = false;
+                    hasArcher = true;
                 }
-                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && !hasSword) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 swordsmanPos_Game = leftSwordsmanPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
+                    hasSword = true;
+                    hasArcher = false;
                 }
             }
             // each lane has advantage, then deploy more troop on the better lane (right side) for pushing
@@ -268,7 +267,7 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
                     Vec2 giantPos_Game = rightGiantPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Giant, giantPos_Game);
                 }
-                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0 && getNumOfGiant() > 1) {
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfGiant() > 1) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
 
@@ -286,26 +285,26 @@ void Controller_AI_HeqingChen::tick(float deltaTSec)
         else {
             // the left side has less military power, deploy troop for defense
             if (rightCostDiff >= 0) {
-                if (m_pPlayer->getElixir() > 7 && m_pPlayer->getElixir() <= 8 && getNumOfArcher() != 0 && getNumOfSwordsman() != 0) {
-                    bool isNorth = m_pPlayer->isNorth();
-                    Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
-                    Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
+                bool hasSword = false;
+                bool hasArcher = false;
 
-                    m_pPlayer->placeMob(iEntityStats::Swordsman, swordsmanPos_Game);
-                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                    m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
-                }
-                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && getNumOfArcher() == 0) {
+                if (m_pPlayer->getElixir() > 4 && m_pPlayer->getElixir() <= 5 && !hasArcher) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 archerPos_Game = rightArcherPos.Player2Game(isNorth);
 
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
                     m_pPlayer->placeMob(iEntityStats::Archer, archerPos_Game);
+                    hasSword = false;
+                    hasArcher = true;
+
                 }
-                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && getNumOfSwordsman() == 0) {
+                if (m_pPlayer->getElixir() > 3 && m_pPlayer->getElixir() <= 5 && !hasSword) {
                     bool isNorth = m_pPlayer->isNorth();
                     Vec2 swordsmanPos_Game = rightSwordsmanPos.Player2Game(isNorth);
                     m_pPlayer->placeMob(iEntityStats::Swordsman, rightSwordsmanPos);
+                    bool hasSword = true;
+                    bool hasArcher = false;
+
                 }
             }
             // each lane has advantage, then deploy more troop on the better lane (left side) for pushing
