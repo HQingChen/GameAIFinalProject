@@ -1,1 +1,20 @@
+Before I designed the AI for this project, I played the training mode of Crash Royale several times to see the basic behavior of AI in
+this game. I found that the deployment of the AI is somehow with constant order if I wouldn't do anything. Also, I found that the training
+AI seems to be more likely to avoid my own troops sometimes. For example, if I deployed some armies on the left side for pushing the
+tower, the AI would probably put its troops on the right side. It is obvious that the AI conciously reduce difficulty since it is training
+mode. Therefore, after doing this research, as for my design goal, I would like to make the AI to be harder than the training mode. The
+style of the AI is close to counter attack. That is, while considering attack with deployment, the AI would consider defend first rather
+than sacrificing one own tower for pushing the opponent's tower.
 
+To come true this, I considered two large case. Both case would deploy the troops base on the elixir. The first one is that there are no
+opponents on the board. In this case, the AI would default on deploying the troops on the left side. I hard coded this part for deploying 
+the troops with balancing the types of arms. For example, keep the number of each type of arm to avoid being restrained obviously. The
+second case is that there are opponents on the board. Since the types of troops are not much diverse (only three types of arms). I used
+two varibles, 'leftCostDiff' and 'rightCostDiff' to see which side has better combat effectives simply based on the difference of the cost
+of each player. For example, if 'leftCostDiff' is larger than 'rightCostDiff', it means that in terms of the AI, the left side has less 
+military superiority. But there are still two cases. The first is that 'leftCostDiff' is larger than 0, which means that for the opponent, 
+it has more troops than the AI and it will push the tower on the left side. So in this case, AI should first consider putting the
+Swordsman and Archer on the left side for defense, since only those two arms can attack opponent troops. The other is that 'leftCostDiff'
+is smaller than 0, which means that both side have military superiority. So I made the AI deploy the troops on the right side for better 
+attacking opponents and improving the advantages. In this case, the AI should first consider putting the Giant on the board for better 
+pushing the tower on the right side.
